@@ -7,8 +7,8 @@ import (
 	"github.com/projectdiscovery/gologger"
 	"github.com/projectdiscovery/gologger/formatter"
 	"github.com/projectdiscovery/gologger/levels"
-	"github.com/projectdiscovery/shuffledns/pkg/massdns"
 	fileutil "github.com/projectdiscovery/utils/file"
+	"github.com/tavgar/shuffledns/pkg/massdns"
 )
 
 // validateOptions validates the configuration options passed

@@ -13,11 +13,11 @@ import (
 
 	"github.com/projectdiscovery/gologger"
 	retryabledns "github.com/projectdiscovery/retryabledns"
-	"github.com/projectdiscovery/shuffledns/pkg/massdns"
-	"github.com/projectdiscovery/shuffledns/pkg/wildcard"
-	wildcards "github.com/projectdiscovery/shuffledns/pkg/wildcards"
 	fileutil "github.com/projectdiscovery/utils/file"
 	"github.com/rs/xid"
+	"github.com/tavgar/shuffledns/pkg/massdns"
+	"github.com/tavgar/shuffledns/pkg/wildcard"
+	wildcards "github.com/tavgar/shuffledns/pkg/wildcards"
 )
 
 // Runner is a client for running the enumeration process.
