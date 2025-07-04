@@ -12,7 +12,10 @@ import (
 	"time"
 
 	"github.com/projectdiscovery/gologger"
+	retryabledns "github.com/projectdiscovery/retryabledns"
 	"github.com/projectdiscovery/shuffledns/pkg/massdns"
+	"github.com/projectdiscovery/shuffledns/pkg/wildcard"
+	wildcards "github.com/projectdiscovery/shuffledns/pkg/wildcards"
 	fileutil "github.com/projectdiscovery/utils/file"
 	"github.com/rs/xid"
 )
@@ -21,6 +24,36 @@ import (
 type Runner struct {
 	tempDir string
 	options *Options
+}
+
+// Prepare initializes helpers needed before running enumeration.
+func (r *Runner) Prepare() error {
+	resolvers, _ := wildcards.LoadResolversFromFile(r.options.ResolversFile)
+	detector, err := wildcard.NewDetector(wildcard.Options{
+		Domains:   r.options.Domains,
+		Resolvers: resolvers,
+		Retries:   r.options.Retries,
+		Samples:   r.options.WildcardBaseline,
+		Threshold: r.options.WildcardThreshold,
+		SavePath:  r.options.WildcardSave,
+		LoadPath:  r.options.WildcardLoad,
+		Log:       r.options.WildcardLog,
+		Silent:    r.options.Silent,
+	})
+	if err != nil {
+		return err
+	}
+
+	prev := r.options.OnResult
+	r.options.OnResult = func(d *retryabledns.DNSData) {
+		if detector.ShouldFilter(d) {
+			return
+		}
+		if prev != nil {
+			prev(d)
+		}
+	}
+	return nil
 }
 
 // New creates a new client for running enumeration process.
@@ -52,7 +85,7 @@ func New(options *Options) (*Runner, error) {
 
 // Close releases all the resources and cleans up
 func (r *Runner) Close() {
-	os.RemoveAll(r.tempDir)
+	_ = os.RemoveAll(r.tempDir)
 }
 
 // findBinary searches for massdns binary in various pre-defined paths
@@ -81,6 +114,10 @@ func (r *Runner) findBinary() string {
 // RunEnumeration sets up the input layer for giving input to massdns
 // binary and runs the actual enumeration
 func (r *Runner) RunEnumeration() {
+	if err := r.Prepare(); err != nil {
+		gologger.Error().Msgf("preparing runner: %s", err)
+		return
+	}
 	// Handle only wildcard filtering
 	if r.options.MassdnsRaw != "" {
 		r.processSubdomains()
@@ -114,7 +151,7 @@ func (r *Runner) processDomain() {
 	inputFile, err := os.Open(r.options.Wordlist)
 	if err != nil {
 		gologger.Error().Msgf("Could not read bruteforce wordlist (%s): %s\n", r.options.Wordlist, err)
-		file.Close()
+		_ = file.Close()
 		return
 	}
 
@@ -133,9 +170,9 @@ func (r *Runner) processDomain() {
 			_, _ = writer.WriteString(text + "." + domain + "\n")
 		}
 	}
-	writer.Flush()
-	inputFile.Close()
-	file.Close()
+	_ = writer.Flush()
+	_ = inputFile.Close()
+	_ = file.Close()
 
 	gologger.Info().Msgf("Generating permutations took %s at %s\n", time.Since(now), resolveFile)
 
@@ -155,7 +192,7 @@ func (r *Runner) processSubdomains() {
 			return
 		}
 		_, _ = io.Copy(file, os.Stdin)
-		file.Close()
+		_ = file.Close()
 		resolveFile = file.Name()
 	} else {
 		// Use the file if user has provided one

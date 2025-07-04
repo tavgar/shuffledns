@@ -33,15 +33,22 @@ type Options struct {
 	WildcardOutputFile string              // StrictWildcard flag indicates whether wildcard check has to be performed on each found subdomains
 	MassDnsCmd         string              // Supports massdns flags(example -i)
 	DisableUpdateCheck bool                // DisableUpdateCheck disable automatic update check
+	WildcardBaseline   int                 // samples per domain for baseline wildcard detection
+	WildcardThreshold  int                 // percentage overlap to treat as wildcard
+	WildcardSave       string              // path to save baseline json
+	WildcardLoad       string              // path to load baseline json
+	WildcardLog        bool                // verbose wildcard messages
 	Mode               string
 
 	OnResult func(*retryabledns.DNSData)
 }
 
 var DefaultOptions = Options{
-	Threads:         10000,
-	Retries:         5,
-	WildcardThreads: 250,
+	Threads:           10000,
+	Retries:           5,
+	WildcardThreads:   250,
+	WildcardBaseline:  5,
+	WildcardThreshold: 100,
 }
 
 // ParseOptions parses the command line flags provided by a user
@@ -85,7 +92,12 @@ func ParseOptions() *Options {
 	flagSet.CreateGroup("optimizations", "Optimizations",
 		flagSet.IntVar(&options.Retries, "retries", 5, "Number of retries for dns enumeration"),
 		flagSet.BoolVarP(&options.StrictWildcard, "strict-wildcard", "sw", false, "Perform wildcard check on all found subdomains"),
-		flagSet.IntVar(&options.WildcardThreads, "wt", 250, "Number of concurrent wildcard checks"),
+		flagSet.IntVarP(&options.WildcardThreads, "wildcard-threads", "wct", 250, "Number of concurrent wildcard checks"),
+		flagSet.IntVarP(&options.WildcardBaseline, "wildcard-baseline", "wb", DefaultOptions.WildcardBaseline, "samples per domain for baseline wildcard detection"),
+		flagSet.IntVarP(&options.WildcardThreshold, "wildcard-threshold", "wt", DefaultOptions.WildcardThreshold, "percentage overlap to treat as wildcard"),
+		flagSet.StringVar(&options.WildcardSave, "wildcard-save", "", "path to write baseline JSON"),
+		flagSet.StringVar(&options.WildcardLoad, "wildcard-load", "", "path to read baseline JSON"),
+		flagSet.BoolVar(&options.WildcardLog, "wildcard-log", false, "verbose wildcard messages"),
 	)
 
 	flagSet.CreateGroup("debug", "Debug",
