@@ -3,6 +3,7 @@ module github.com/projectdiscovery/shuffledns
 go 1.21
 
 require (
+	github.com/cespare/xxhash/v2 v2.2.0
 	github.com/miekg/dns v1.1.59
 	github.com/projectdiscovery/dnsx v1.2.1
 	github.com/projectdiscovery/goflags v0.1.53

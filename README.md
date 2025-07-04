@@ -87,7 +87,12 @@ CONFIGURATIONS:
 OPTIMIZATIONS:
    -retries int           Number of retries for dns enumeration (default 5)
    -sw, -strict-wildcard  Perform wildcard check on all found subdomains
-   -wt int                Number of concurrent wildcard checks (default 250)
+   -wct, -wildcard-threads int  Number of concurrent wildcard checks (default 250)
+   -wb, -wildcard-baseline int  samples per domain for baseline wildcard detection (default 5)
+   -wt, -wildcard-threshold int percentage overlap to treat as wildcard (default 100)
+   -wildcard-save string          path to write baseline JSON
+   -wildcard-load string          path to read baseline JSON
+   -wildcard-log                  verbose wildcard messages
 
 DEBUG:
    -silent         Show only subdomains in output
@@ -163,6 +168,8 @@ echo hackerone.com | shuffledns -w wordlist.txt -r resolvers.txt -mode bruteforc
 ## Handling Wildcards
 
 A special feature of `shuffleDNS` is its ability to handle multi-level DNS based wildcards, and do it so with a very reduced number of DNS requests. Sometimes all the subdomains would resolve, leading to lots of garbage in the results. The way `shuffleDNS` handles this is by keeping track of how many subdomains point to an IP, and if the number of subdomains increase beyond a certain small threshold, it checks for wildcard on all the levels of the hosts for that IP iteratively.
+
+The new baseline detector further improves accuracy against providers like AWS Application Load Balancers where every random name resolves to an IP from a large rotating pool. By sampling a few random labels on startup and comparing later responses against this baseline you avoid filtering valid hosts.
 
 </td>
 </tr>
