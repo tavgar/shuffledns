@@ -14,12 +14,12 @@ import (
 
 	"github.com/projectdiscovery/dnsx/libs/dnsx"
 	"github.com/projectdiscovery/gologger"
-	"github.com/projectdiscovery/shuffledns/pkg/parser"
-	"github.com/projectdiscovery/shuffledns/pkg/store"
-	"github.com/projectdiscovery/shuffledns/pkg/wildcards"
 	folderutil "github.com/projectdiscovery/utils/folder"
 	stringsutil "github.com/projectdiscovery/utils/strings"
 	"github.com/remeh/sizedwaitgroup"
+	"github.com/tavgar/shuffledns/pkg/parser"
+	"github.com/tavgar/shuffledns/pkg/store"
+	"github.com/tavgar/shuffledns/pkg/wildcards"
 )
 
 // runs massdns binary with the specified options

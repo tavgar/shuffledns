@@ -2,7 +2,7 @@ package massdns
 
 import (
 	"github.com/projectdiscovery/retryabledns"
-	"github.com/projectdiscovery/shuffledns/pkg/wildcards"
+	"github.com/tavgar/shuffledns/pkg/wildcards"
 )
 
 type Instance struct {

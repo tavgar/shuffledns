@@ -7,9 +7,9 @@
 
 
 <p align="center">
-<a href="https://goreportcard.com/report/github.com/projectdiscovery/shuffledns"><img src="https://goreportcard.com/badge/github.com/projectdiscovery/shuffledns"></a>
-<a href="https://github.com/projectdiscovery/shuffledns/issues"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat"></a>
-<a href="https://github.com/projectdiscovery/shuffledns/releases"><img src="https://img.shields.io/github/release/projectdiscovery/shuffledns"></a>
+<a href="https://goreportcard.com/report/github.com/tavgar/shuffledns"><img src="https://goreportcard.com/badge/github.com/tavgar/shuffledns"></a>
+<a href="https://github.com/tavgar/shuffledns/issues"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat"></a>
+<a href="https://github.com/tavgar/shuffledns/releases"><img src="https://img.shields.io/github/release/projectdiscovery/shuffledns"></a>
 <a href="https://twitter.com/pdiscoveryio"><img src="https://img.shields.io/twitter/follow/pdiscoveryio.svg?logo=twitter"></a>
 <a href="https://discord.gg/projectdiscovery"><img src="https://img.shields.io/discord/695645237418131507.svg?logo=discord"></a>
 </p>
@@ -120,7 +120,7 @@ The tool also needs a list of valid resolvers. The [dnsvalidator](https://github
 `shuffledns` requires `go1.21+` to install successfully. Run the following command to install the latest version: 
 
 ```bash
-go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
+go install -v github.com/tavgar/shuffledns/cmd/shuffledns@latest
 ```
 
 ## Running shuffledns
@@ -182,4 +182,4 @@ The new baseline detector further improves accuracy against providers like AWS A
 
 ### License
 
-`shuffledns` is distributed under [GPL v3 License](https://github.com/projectdiscovery/shuffledns/blob/main/LICENSE.md)
+`shuffledns` is distributed under [GPL v3 License](https://github.com/tavgar/shuffledns/blob/main/LICENSE.md)
